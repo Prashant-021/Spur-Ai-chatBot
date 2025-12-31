@@ -31,24 +31,29 @@ const ChatWidget = () => {
     }
 
     return (
-        <div className='chatBox border-2 p-6 rounded-xl h-[50vh]'>
-            <div className='flex gap-2'>
+        <div className='chatBox border-2  rounded-xl h-[80vh] w-full md:w-96 m-auto flex flex-col overflow-y-scroll'>
+            <div className="messages rounded-xl p-3 h-auto grow flex items-end flex-col justify-end">
+                {messages.map((message, index) => (
+                    <div key={index} className={`${message.sender} `}>
+                        <p className={`font-bold text-white ${message.sender === 'ai' ? 'text-left ' : 'text-right '}`}>{message.sender === 'ai' ? 'Agent' : 'You'}</p>
+                        <div className={`${message.sender} ${message.sender === 'ai' ? 'text-left bg-[#18252c]' : 'text-right bg-[#0a0a0a]'} mb-3 p-3 rounded-xl `}>
+                            {message.text}
+                        </div>
+                    </div>
+                ))}
+                {loading && <div>Agent is typing...</div>}
+                <div ref={bottomRef}></div>
+            </div>
+            <div className='flex gap-2 sticky p-3 bottom-0 bg-black'>
                 <input
                     type="text"
                     value={input}
-                    className='border p-2 rounded-xl '
+                    className='border p-2 rounded-xl grow'
                     onChange={e => setInput(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && sendMessage()}
                     placeholder='Enter your message...'
                 />
                 <button onClick={sendMessage} disabled={loading} >Send</button>
-            </div>
-            <div className="messages">
-                {messages.map((message, index) => (
-                    <div key={index} className={message.sender}>{message.text}</div>
-                ))}
-                {loading && <div>Agent is typing...</div>}
-                <div ref={bottomRef}></div>
             </div>
         </div>
 
