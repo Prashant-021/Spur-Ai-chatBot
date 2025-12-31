@@ -33,13 +33,13 @@ const ChatWidget = () => {
     useEffect(() => {
         if (!sessionId) return;
 
-        fetch(`http://localhost:3000/chat/history/${sessionId}`)
+        fetch(`${import.meta.env}/chat/history/${sessionId}`)
             .then(res => res.json())
             .then(data => setMessages(data.messages));
     }, [sessionId]);
 
     return (
-        <div className='chatBox border-2  rounded-xl h-[80vh] w-full md:w-96 m-auto flex flex-col overflow-y-scroll'>
+        <div className='chatBox border-2  rounded-xl h-[80vh] w-full md:w-[800px] m-auto flex flex-col overflow-y-scroll'>
             <div className="messages rounded-xl p-3 h-auto grow flex items-end flex-col justify-end">
                 {messages.map((message, index) => (
                     <div key={index} className={`${message.sender} flex flex-col w-full ${message.sender === 'ai' ? 'items-start' : 'items-end '}  `}>
@@ -52,16 +52,30 @@ const ChatWidget = () => {
                 {loading && <div>Agent is typing...</div>}
                 <div ref={bottomRef}></div>
             </div>
-            <div className='flex gap-2 sticky p-3 bottom-0 bg-black'>
-                <input
-                    type="text"
-                    value={input}
-                    className='border p-2 rounded-xl grow'
-                    onChange={e => setInput(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && sendMessage()}
-                    placeholder='Enter your message...'
-                />
-                <button onClick={sendMessage} disabled={loading} >Send</button>
+
+            <div className='flex gap-2 sticky p-3 bottom-0 bg-black items-end'>
+                <div className='text-left grow'>
+                    <p className={input.length > 1000 ? "text-red-500" : "text-gray-400"}>
+                        {input.length}/1000
+                    </p>
+                    <textarea
+                        type="text"
+                        value={input}
+                        className='border p-2 w-full rounded-xl '
+                        onChange={e => setInput(e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && sendMessage()}
+                        placeholder='Enter your message...'
+                        rows={4}
+                    />
+                </div>
+                <button
+                    className='h-fit '
+                    onClick={sendMessage}
+                    disabled={
+                        loading ||
+                        !input.trim() ||
+                        input.length > 1000}
+                >Send</button>
             </div>
         </div>
 
