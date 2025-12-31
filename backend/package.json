@@ -6,7 +6,7 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
     "postinstall": "npx prisma generate",
-    "start": "node build/server.js",
+    "start": "node build/server.ts",
     "migrate": "npx prisma migrate deploy",
     "dbpush": "npx prisma db push"
   },
