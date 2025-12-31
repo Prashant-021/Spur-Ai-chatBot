@@ -16,7 +16,7 @@ const ChatWidget = () => {
         setMessages(prev => [...prev, { sender: "user", text: input }])
         setLoading(true)
 
-        const res = await fetch("http://localhost:3000/chat/message", {
+        const res = await fetch(`${import.meta.env}/chat/message}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ message: input, sessionId })
