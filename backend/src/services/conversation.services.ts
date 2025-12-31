@@ -1,4 +1,4 @@
-import { prisma, Prisma } from '../db/prisma'
+import { prisma } from '../db/prisma'
 
 export async function getOrCreateConversation(sessionID?: string) {
     if (sessionID) {
