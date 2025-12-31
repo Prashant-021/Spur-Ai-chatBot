@@ -154,11 +154,15 @@ http://localhost:5173
   "message": "What is your return policy?",
   "sessionId": "optional-session-id"
 }
+```
+
 **Response**
+```json
 {
-  "reply": "Our return policy allows returns within 30 days.",
-  "sessionId": "session-id"
+"reply": "Our return policy allows returns within 30 days.",
+"sessionId": "session-id"
 }
+
 ```
 
 ## 🧠 Backend Architecture
