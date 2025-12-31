@@ -4,7 +4,7 @@ const ChatWidget = () => {
     const [messages, setMessages] = useState([])
     const [input, setInput] = useState('')
     const [loading, setLoading] = useState(false)
-    const [sessionId, setSessionId] = useState(null)
+    const [sessionId, setSessionId] = useState(localStorage.getItem("sessionId") || null);
     const bottomRef = useRef(null)
 
     useEffect(() => {
@@ -26,17 +26,25 @@ const ChatWidget = () => {
 
         setMessages(prev => [...prev, { sender: "ai", text: data.reply }])
         setSessionId(data.sessionId)
+        localStorage.setItem("sessionId", data.sessionId);
         setInput('')
         setLoading(false)
     }
+    useEffect(() => {
+        if (!sessionId) return;
+
+        fetch(`http://localhost:3000/chat/history/${sessionId}`)
+            .then(res => res.json())
+            .then(data => setMessages(data.messages));
+    }, [sessionId]);
 
     return (
         <div className='chatBox border-2  rounded-xl h-[80vh] w-full md:w-96 m-auto flex flex-col overflow-y-scroll'>
             <div className="messages rounded-xl p-3 h-auto grow flex items-end flex-col justify-end">
                 {messages.map((message, index) => (
-                    <div key={index} className={`${message.sender} `}>
-                        <p className={`font-bold text-white ${message.sender === 'ai' ? 'text-left ' : 'text-right '}`}>{message.sender === 'ai' ? 'Agent' : 'You'}</p>
-                        <div className={`${message.sender} ${message.sender === 'ai' ? 'text-left bg-[#18252c]' : 'text-right bg-[#0a0a0a]'} mb-3 p-3 rounded-xl `}>
+                    <div key={index} className={`${message.sender} flex flex-col w-full ${message.sender === 'ai' ? 'items-start' : 'items-end '}  `}>
+                        <p className={`font-bold w-fit text-white ${message.sender === 'ai' ? 'text-left ' : 'text-right '}`}>{message.sender === 'ai' ? 'Agent' : 'You'}</p>
+                        <div className={`w-fit ${message.sender} ${message.sender === 'ai' ? 'text-left bg-[#18252c]' : 'text-right bg-[#0a0a0a]'} mb-3 p-3 rounded-xl `}>
                             {message.text}
                         </div>
                     </div>

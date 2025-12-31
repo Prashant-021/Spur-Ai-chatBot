@@ -7,6 +7,7 @@ import {
 import { validateMessage } from "../utils/validate";
 import { generateReply } from "../services/llm.service";
 
+
 export async function postChatMessage(req: Request, res: Response) {
     try {
         const { message, sessionId } = req.body;
@@ -27,5 +28,28 @@ export async function postChatMessage(req: Request, res: Response) {
                     ? "Sorry, our support agent is unavailable right now."
                     : err.message
         });
+    }
+}
+
+export async function getChatHistory(req: Request, res: Response) {
+    try {
+        const { sessionId } = req.params;
+        if (!sessionId) {
+            return res.status(400).json({ error: "SessionId is required" })
+        }
+        const messages = await getConversationHistory(sessionId)
+
+        res.json({
+            sessionId,
+            messages: messages.map(m => ({
+                sender: m.role === "assistant" ? 'ai' : 'user',
+                text: m.content
+            }))
+        })
+    }
+    catch (error) {
+        res.status(500).json({
+            error: "Failed to fetch chat history"
+        })
     }
 }
