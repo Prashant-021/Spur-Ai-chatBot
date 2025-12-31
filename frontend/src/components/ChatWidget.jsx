@@ -16,7 +16,7 @@ const ChatWidget = () => {
         setMessages(prev => [...prev, { sender: "user", text: input }])
         setLoading(true)
 
-        const res = await fetch(`${import.meta.env}/chat/message}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/chat/message`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ message: input, sessionId })
@@ -33,13 +33,13 @@ const ChatWidget = () => {
     useEffect(() => {
         if (!sessionId) return;
 
-        fetch(`${import.meta.env}/chat/history/${sessionId}`)
+        fetch(`${import.meta.env.VITE_API_BASE_URL}/chat/history/${sessionId}`)
             .then(res => res.json())
             .then(data => setMessages(data.messages));
     }, [sessionId]);
 
     return (
-        <div className='chatBox border-2  rounded-xl h-[80vh] w-full md:w-[800px] m-auto flex flex-col overflow-y-scroll'>
+        <div className='chatBox border-2  rounded-xl h-[80vh] w-full md:w-200 m-auto flex flex-col overflow-y-scroll'>
             <div className="messages rounded-xl p-3 h-auto grow flex items-end flex-col justify-end">
                 {messages.map((message, index) => (
                     <div key={index} className={`${message.sender} flex flex-col w-full ${message.sender === 'ai' ? 'items-start' : 'items-end '}  `}>
