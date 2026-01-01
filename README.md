@@ -104,6 +104,11 @@ npm run dev
 http://localhost:3000
 ```
 
+### Deployment Notes
+The backend is deployed on Render’s free tier.
+Due to free-tier limitations, the service may cold-start after periods of inactivity,
+causing the first request to take longer than usual.
+
 ### .env Setup (frontend)
 
 ```bash
